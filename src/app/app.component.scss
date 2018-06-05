@@ -9,6 +9,11 @@ h1 {
   text-align: center;
 }
 
+p {
+  width: 100%;
+  text-align: center;
+}
+
 button {
   width: 15%;
   margin: 0.5%;
@@ -18,4 +23,9 @@ button {
   display: flex;
   align-content: center;
   justify-content: center;
+}
+
+.counter {
+  position: fixed;
+  bottom: 1%;
 }

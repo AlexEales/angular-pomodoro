@@ -45,7 +45,7 @@ export class AppComponent {
       case 'pomodoro':
         // Increment the counter.
         this.pomodoroCount += 1;
-        if (this.pomodoroCount === 2) {
+        if (this.pomodoroCount % 2 === 0) {
           this.message = 'Time to take a long break!';
         } else {
           this.message = 'Time to take a short break!';
@@ -59,16 +59,17 @@ export class AppComponent {
         break;
     }
     // Open the modal and then on close change the timer to the opposite mode. (Pomodoro -> Break etc.)
-    this.modalService.open(content).result.then((result) => {
-      if (this.mode === 'short' || this.mode === 'long') { // If we have just had a break, back to work.
-        this.mode = 'pomodoro';
-      } else if (this.mode === 'pomodoro' && this.pomodoroCount === 2) { // If we have worked 2 pomodoros then long break.
-        this.pomodoroCount = 0;
-        this.mode = 'long';
-      } else { // Else have a short break.
-        this.mode = 'short';
-      }
-    });
+    this.modalService.open(content).result.then((result) => this.onModalDismissed(), (reason) => this.onModalDismissed());
+  }
+
+  onModalDismissed() {
+    if (this.mode === 'short' || this.mode === 'long') { // If we have just had a break, back to work.
+      this.mode = 'pomodoro';
+    } else if (this.mode === 'pomodoro' && this.pomodoroCount % 2 === 0) { // If we have worked 2 pomodoros then long break.
+      this.mode = 'long';
+    } else { // Else have a short break.
+      this.mode = 'short';
+    }
   }
 
 }

@@ -39,18 +39,26 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   startTimer(): void {
-    // Check if the timer is comeplete and if so reset it before starting.
-    if (this.value[0] === 0 && this.value[1] === 0) {
-      this.resetTimer();
+    if (!this.running) {
+      // Set running to true.
+      this.running = true;
+      // Check if the timer is comeplete and if so reset it before starting.
+      if (this.value[0] === 0 && this.value[1] === 0) {
+        this.resetTimer();
+      }
+      // Create Rxjs interval to call a update method every second.
+      this.subscription = interval(1).subscribe(x => this.updateTimer());
     }
-    // Create Rxjs interval to call a update method every second.
-    this.subscription = interval(1000).subscribe(x => this.updateTimer());
   }
 
   stopTimer(): void {
-    // If we want to stop the timer then unsubscribe from the interval.
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.running) {
+      // Set running to false.
+      this.running = false;
+      // If we want to stop the timer then unsubscribe from the interval.
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
     }
   }
 
@@ -61,15 +69,17 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   updateTimer(): void {
-    // Check if the timer is comeplete and if so stop the timer and run onComplete().
-    if (this.value[0] === 0 && this.value[1] === 0) {
-      this.stopTimer();
-      // Make a sound/send an alert.
-      this.onComplete.emit();
-    } else if (this.value[0] !== 0 && this.value[1] === 0) {
-      this.value = [this.value[0] - 1, 59];
-    } else if (this.value[1] !== 0) {
-      this.value = [this.value[0], this.value[1] - 1];
+    if (this.running) {
+      // Check if the timer is comeplete and if so stop the timer and run onComplete().
+      if (this.value[0] === 0 && this.value[1] === 0) {
+        this.stopTimer();
+        // Make a sound/send an alert.
+        this.onComplete.emit();
+      } else if (this.value[0] !== 0 && this.value[1] === 0) {
+        this.value = [this.value[0] - 1, 59];
+      } else if (this.value[1] !== 0) {
+        this.value = [this.value[0], this.value[1] - 1];
+      }
     }
   }
 
