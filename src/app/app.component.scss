@@ -1,0 +1,21 @@
+app-timer {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h1 {
+  text-align: center;
+}
+
+button {
+  width: 15%;
+  margin: 0.5%;
+}
+
+.controls {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}

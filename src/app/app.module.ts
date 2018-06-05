@@ -13,7 +13,7 @@ import { TimerComponent } from './timer/timer.component';
   ],
   imports: [
     BrowserModule,
-    NgbModule.forRoot(),
+    NgbModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

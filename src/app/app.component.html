@@ -1,1 +1,13 @@
-<app-timer [minutes]=5 [seconds]=30></app-timer>
+<h1 class="display-1">Pomodoro</h1>
+
+<div class="controls">
+  <button type="button" class="btn btn-primary" (click)="switchToPomodoro()">Pomodoro</button>
+  <button type="button" class="btn btn-primary" (click)="switchToShortBreak()">Short Break</button>
+  <button type="button" class="btn btn-primary" (click)="switchToLongBreak()">Long Break</button>
+</div>
+
+<div [ngSwitch]="this.mode">
+  <app-timer *ngSwitchCase="'pomodoro'" [minutes]=25 [seconds]=0></app-timer>
+  <app-timer *ngSwitchCase="'short'" [minutes]=5 [seconds]=0></app-timer>
+  <app-timer *ngSwitchCase="'long'" [minutes]=10 [seconds]=0></app-timer>
+</div>
