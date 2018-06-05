@@ -47,7 +47,7 @@ export class TimerComponent implements OnInit, OnDestroy {
         this.resetTimer();
       }
       // Create Rxjs interval to call a update method every second.
-      this.subscription = interval(1).subscribe(x => this.updateTimer());
+      this.subscription = interval(1000).subscribe(x => this.updateTimer());
     }
   }
 
