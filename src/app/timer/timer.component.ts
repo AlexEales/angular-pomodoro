@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable, Subscription, interval } from 'rxjs';
 
 @Component({
@@ -8,13 +8,27 @@ import { Observable, Subscription, interval } from 'rxjs';
 })
 export class TimerComponent implements OnInit, OnDestroy {
 
+  @Input() minutes: number;
+  @Input() seconds: number;
+
   running = false;
   value = [25, 0];
   subscription: Subscription;
 
   constructor() { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if (this.minutes) {
+      this.value[0] = this.minutes;
+    } else {
+      this.minutes = 25;
+    }
+    if (this.seconds) {
+      this.value[1] = this.seconds;
+    } else {
+      this.seconds = 0;
+    }
+  }
 
   ngOnDestroy(): void { }
 
@@ -25,13 +39,15 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   stopTimer(): void {
     // If we want to stop the timer then unsubscribe from the interval.
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   resetTimer(): void {
     // Set the minutes and seconds back to their original values.
     this.stopTimer();
-    this.value = [25, 0];
+    this.value = [this.minutes, this.seconds];
   }
 
   updateTimer(): void {
@@ -39,14 +55,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     if (this.value[0] === 0 && this.value[1] === 0) {
       this.stopTimer();
       // Make a sound/send an alert.
-    }
-    // Otherwise update minutes and seconds.
-    // TODO: This does not work as intended.
-    if (this.value[0] !== 0 && this.value[1] === 0) {
-      this.value[1] = 59;
-      this.value[0] -= 1;
-    } else if(this.value[1] !== 0) {
-      this.value[1] -= 1;
+    } else if (this.value[0] !== 0 && this.value[1] === 0) {
+      this.value = [this.value[0] - 1, 59];
+    } else if (this.value[1] !== 0) {
+      this.value = [this.value[0], this.value[1] - 1];
     }
   }
 
