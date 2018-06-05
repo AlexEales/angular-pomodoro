@@ -7,7 +7,22 @@
 </div>
 
 <div [ngSwitch]="this.mode">
-  <app-timer *ngSwitchCase="'pomodoro'" [minutes]=25 [seconds]=0></app-timer>
-  <app-timer *ngSwitchCase="'short'" [minutes]=5 [seconds]=0></app-timer>
-  <app-timer *ngSwitchCase="'long'" [minutes]=10 [seconds]=0></app-timer>
+  <app-timer *ngSwitchCase="'pomodoro'" [m]=25 [s]=0 (onComplete)="onTimerComplete(content)"></app-timer>
+  <app-timer *ngSwitchCase="'short'" [m]=5 [s]=0 (onComplete)="onTimerComplete(content)"></app-timer>
+  <app-timer *ngSwitchCase="'long'" [m]=10 [s]=0 (onComplete)="onTimerComplete(content)"></app-timer>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Time's Up!</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{message}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c()">Close</button>
+  </div>
+</ng-template>

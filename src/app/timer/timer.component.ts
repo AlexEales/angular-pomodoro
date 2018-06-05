@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
 import { Observable, Subscription, interval } from 'rxjs';
 
 @Component({
@@ -8,8 +8,10 @@ import { Observable, Subscription, interval } from 'rxjs';
 })
 export class TimerComponent implements OnInit, OnDestroy {
 
-  @Input() minutes: number;
-  @Input() seconds: number;
+  @Input() m: number;
+  @Input() s: number;
+  // tslint:disable-next-line:no-output-on-prefix
+  @Output() onComplete: EventEmitter<any> = new EventEmitter();
 
   running = false;
   value = [25, 0];
@@ -18,21 +20,29 @@ export class TimerComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit(): void {
-    if (this.minutes) {
-      this.value[0] = this.minutes;
+    if (this.m) {
+      this.value[0] = this.m;
     } else {
-      this.minutes = 25;
+      this.m = 25;
     }
-    if (this.seconds) {
-      this.value[1] = this.seconds;
+    if (this.s) {
+      this.value[1] = this.s;
     } else {
-      this.seconds = 0;
+      this.s = 0;
     }
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   startTimer(): void {
+    // Check if the timer is comeplete and if so reset it before starting.
+    if (this.value[0] === 0 && this.value[1] === 0) {
+      this.resetTimer();
+    }
     // Create Rxjs interval to call a update method every second.
     this.subscription = interval(1000).subscribe(x => this.updateTimer());
   }
@@ -47,14 +57,15 @@ export class TimerComponent implements OnInit, OnDestroy {
   resetTimer(): void {
     // Set the minutes and seconds back to their original values.
     this.stopTimer();
-    this.value = [this.minutes, this.seconds];
+    this.value = [this.m, this.s];
   }
 
   updateTimer(): void {
-    // Check if the timer is comeplete.
+    // Check if the timer is comeplete and if so stop the timer and run onComplete().
     if (this.value[0] === 0 && this.value[1] === 0) {
       this.stopTimer();
       // Make a sound/send an alert.
+      this.onComplete.emit();
     } else if (this.value[0] !== 0 && this.value[1] === 0) {
       this.value = [this.value[0] - 1, 59];
     } else if (this.value[1] !== 0) {
